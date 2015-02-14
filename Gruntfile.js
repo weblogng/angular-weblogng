@@ -41,7 +41,7 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      files: ['dist/angular-weblogng.js'],
+      files: ['src/main.js', 'test/main.spec.js'],
       options: {
         globals: {
           console: true,

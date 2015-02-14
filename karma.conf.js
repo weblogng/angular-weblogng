@@ -9,23 +9,22 @@ module.exports = function (config) {
 
 
       // frameworks to use
-      frameworks: ['requirejs', 'jasmine'],
+      frameworks: ['jasmine'],
 
 
       // list of files / patterns to load in the browser
       files: [
         'bower_components/angular/angular.js',
      		'bower_components/angular-mocks/angular-mocks.js',
+     		'bower_components/weblogng-logger/release/logger.js',
         'dist/angular-weblogng.js',
-        {pattern: 'test/**/*.spec.js', included: false},
-        'test/test-main.js'
+        'test/main.spec.js'
       ],
 
 
       // list of files to exclude
 
       exclude: [
-        //'app/config.js',
         'bower_components/jasmine/**/*.js'
       ],
 
@@ -64,7 +63,7 @@ module.exports = function (config) {
       // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
       // - PhantomJS
       // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-      browsers: ['Chrome'],
+      browsers: ['PhantomJS'],
 
 
       // If browser does not capture in given timeout [ms], kill it

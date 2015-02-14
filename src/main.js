@@ -3,22 +3,11 @@
 (function(angular) {
   'use strict';
 
-  angular.module('weblogng', []);
+  var weblogngModule = angular.module('weblogng', []);
+
+  weblogngModule.factory('logger', function () {
+    function logger(){ console.log('hello log'); }
+    return logger;
+  });
 
 })(angular);
-
-// Base function.
-/*
-var angular-weblogng = function() {
-  // Add functionality here.
-  return true;
-};
-*/
-
-
-// Version.
-//angular-weblogng.VERSION = '0.0.0';
-
-
-// Export to the root, which is probably `window`.
-//root.angular-weblogng = angular-weblogng;

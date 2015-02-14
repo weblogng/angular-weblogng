@@ -1,11 +1,21 @@
 'use strict';
 
-describe('WeblogNG Service', function(){
+describe('WeblogNG Module', function(){
 
-  /*beforeEach(module('weblogng'));*/
+  var scope;
+  var logger;
 
-  it('should run a test', function() {
-  		expect(true).toBeTruthy();
-  	});
+  beforeEach(module('weblogng'));
+
+  beforeEach(inject(function ($rootScope, _logger_) {
+    scope = $rootScope.$new();
+    logger = _logger_;
+  }));
+
+
+  it('should exist ', function () {
+    expect(logger).toBeDefined();
+    logger();
+  });
 
 });

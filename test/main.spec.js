@@ -1,6 +1,6 @@
 'use strict';
 
-var testKey = 'test-key';
+var testKey = 'test-api-key';
 var testOptions = {
   publishNavigationTimingMetrics: true,
   publishUserActive: true,
@@ -13,8 +13,6 @@ var testConfig = {
 };
 
 angular.module('test', ['weblogng'])
-    .constant('weblogngApiKey', testKey)
-    .constant('weblogngOptions', testOptions)
     .constant('weblogngConfig', testConfig)
     ;
 

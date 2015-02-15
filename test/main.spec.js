@@ -1,29 +1,21 @@
 'use strict';
 
-angular.module('test', ['weblogng'])
-    .constant('weblogngConfig', {apiKey: '93c5a127-e2a4-42cc-9cc6-cf17fdac8a7f', options: {}})
-    ;
+describe('Module: weblogng', function() {
 
-describe('WeblogNG Module', function(){
+  beforeEach(module('weblogng'));
 
-  var scope;
-  var logger;
+  it('should be configurable', function () {
+    var testKey = 'test-key';
+    var testConfig = {some: 'config'};
 
-  beforeEach(module('test'));
-
-  beforeEach(inject(function ($rootScope, _logger_) {
-    scope = $rootScope.$new();
-    logger = _logger_;
-  }));
-
-
-  describe('logger', function(){
-    it('should exist ', function () {
-      expect(logger).toBeDefined();
-      expect(logger.executeWithTiming).toBeDefined();
-      expect(logger.recordStart).toBeDefined();
-      expect(logger.recordFinishAndSendMetric).toBeDefined();
+    module(function (_$weblogngProvider_) {
+      _$weblogngProvider_.configure(testKey, testConfig);
     });
+    inject(function (_$weblogng_) {
+      console.log('_$weblogng_: ' + _$weblogng_);
+      expect(_$weblogng_.config).toBe(testConfig);
+    });
+
   });
 
 });

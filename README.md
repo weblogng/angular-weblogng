@@ -14,7 +14,7 @@ Using Bower:
 
     bower install angular-weblogng
 
-Or grab the [source](https://github.com/weblogng/angular-weblogng/dist/angular-weblogng.js) ([minified](https://github.com/weblogng/angular-weblogng/dist/angular-weblogng.min.js)).
+Or grab the [source](https://github.com/weblogng/angular-weblogng/blob/master/dist/angular-weblogng.js) ([minified](https://github.com/weblogng/angular-weblogng/blob/master/dist/angular-weblogng.min.js)).
 
 ## Documentation
 

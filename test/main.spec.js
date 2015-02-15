@@ -1,19 +1,31 @@
 'use strict';
 
+var testKey = 'test-key';
+var testOptions = {
+  publishNavigationTimingMetrics: true,
+  publishUserActive: true,
+  application: 'ui'
+};
+
+var testConfig = {
+  apiKey: testKey,
+  options: testOptions
+};
+
+angular.module('test', ['weblogng'])
+    .constant('weblogngApiKey', testKey)
+    .constant('weblogngOptions', testOptions)
+    .constant('weblogngConfig', testConfig)
+    ;
+
 describe('Module: weblogng', function() {
 
-  beforeEach(module('weblogng'));
+  beforeEach(module('test'));
 
   it('should be configurable', function () {
-    var testKey = 'test-key';
-    var testConfig = {some: 'config'};
-
-    module(function (_$weblogngProvider_) {
-      _$weblogngProvider_.configure(testKey, testConfig);
-    });
     inject(function (_$weblogng_) {
-      console.log('_$weblogng_: ' + _$weblogng_);
-      expect(_$weblogng_.config).toBe(testConfig);
+      expect(_$weblogng_.apiKey).toEqual(testConfig.apiKey);
+      expect(_$weblogng_.options).toEqual(testConfig.options);
     });
 
   });

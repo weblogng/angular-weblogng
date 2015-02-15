@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/weblogng/angular-weblogng.svg?branch=master)](https://travis-ci.org/weblogng/angular-weblogng)
+
 # angular-weblogng
 
 AngularJS module for the WeblogNG client library.

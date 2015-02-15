@@ -14,7 +14,14 @@
       ]
     };
   })
-    .run()
+    .run(function ($rootScope, $injector) {
+      $rootScope.$on('$routeChangeSuccess', function (event, next) {
+        var logger = $injector.get('$weblogng');
+        logger.recordEvent('routeChangeSuccess-' + next.loadedTemplateUrl);
+      });
+    }
+  )
+
   ;
 
 })(angular);

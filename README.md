@@ -16,9 +16,27 @@ Using Bower:
 
 Or grab the [source](https://github.com/weblogng/angular-weblogng/blob/master/dist/angular-weblogng.js) ([minified](https://github.com/weblogng/angular-weblogng/blob/master/dist/angular-weblogng.min.js)).
 
-## Documentation
+## Usage
 
-Start with `docs/MAIN.md`.
+The WeblogNG module can be integrated into an application by:
+
+1. include the angular-weblogng.js script in your application, e.g. bower_components/angular-weblogng/dist/angular-weblogng.js 
+2. define the 'weblogng' module as one of the application's dependencies
+3. declare the 'weblogngConfig' constant
+
+Example app configuration with the WeblogNG module:
+
+    angular.module('yourAppModule', [
+        'weblogng'
+      ])
+      .constant('weblogngConfig', {
+        apiKey: 'your api key',
+        options: {
+          publishNavigationTimingMetrics: true,
+          publishUserActive: true,
+          application: 'your application name'
+        }
+      })
 
 ## Contributing
 

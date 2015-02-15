@@ -55,6 +55,12 @@ module.exports = function(grunt) {
     watch: {
       files: ['<%= jshint.files %>'],
       tasks: ['concat', 'jshint', 'karma:continuous']
+    },
+
+    release: {
+      options: {
+        additionalFiles: ['bower.json']
+      }
     }
 
   });
@@ -64,8 +70,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-release');
 
   grunt.registerTask('test', ['jshint', 'karma:continuous']);
   grunt.registerTask('default', ['concat', 'jshint', 'karma:continuous', 'uglify']);
+  grunt.registerTask('prerelease', ['default']);
 
 };

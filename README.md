@@ -2,11 +2,14 @@
 
 # angular-weblogng
 
-AngularJS module for the WeblogNG client library.
+angular-weblogng is an AngularJS module for the [WeblogNG Javascript Client library](https://github.com/weblogng/weblogng-client-javascript)
 
-## About
-
-See the [project homepage](http://weblogng.github.io/angular-weblogng).
+angular-weblogng provides:
+ 
+* automatic measurement and reporting of application load time
+* automatic measurement and reporting of requests made with the [$http service](https://docs.angularjs.org/api/ng/service/$http)
+* automatic measurement of the number of active users
+* easy access to the [WeblogNG Javascript Client library](https://github.com/weblogng/weblogng-client-javascript)
 
 ## Installation
 

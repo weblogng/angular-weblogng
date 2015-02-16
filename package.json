@@ -1,6 +1,6 @@
 {
   "name": "angular-weblogng",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/angular-weblogng.min.js",
   "description": "AngularJS module for the WeblogNG client library.",
   "repository": {

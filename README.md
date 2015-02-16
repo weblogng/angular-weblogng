@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/weblogng/angular-weblogng.svg?branch=master)](https://travis-ci.org/weblogng/angular-weblogng)
 
-# angular-weblogng
+# angular-weblogng #
 
 angular-weblogng is an AngularJS module for the [WeblogNG Javascript Client library](https://github.com/weblogng/weblogng-client-javascript)
 
@@ -11,19 +11,19 @@ angular-weblogng provides:
 * automatic measurement of the number of active users
 * easy access to the [WeblogNG Javascript Client library](https://github.com/weblogng/weblogng-client-javascript)
 
-## Installation
+## Installation ##
 
 Using Bower:
 
-    bower install angular-weblogng
+    bower install angular-weblogng --save
 
 Or grab the [source](https://github.com/weblogng/angular-weblogng/blob/master/dist/angular-weblogng.js) ([minified](https://github.com/weblogng/angular-weblogng/blob/master/dist/angular-weblogng.min.js)).
 
-## Usage
+## Usage ##
 
 The WeblogNG module can be integrated into an application by:
 
-1. include the angular-weblogng.js script in your application, e.g. bower_components/angular-weblogng/dist/angular-weblogng.js 
+1. include the angular-weblogng.js and WeblogNG Logger scripts in your application, e.g. bower_components/angular-weblogng/dist/angular-weblogng.js and bower_components/weblogng-logger/release/logger.js 
 2. define the 'weblogng' module as one of the application's dependencies
 3. declare the 'weblogngConfig' constant
 
@@ -40,10 +40,14 @@ Example app configuration with the WeblogNG module:
           application: 'your application name'
         }
       })
+      
+## Documentation ##
 
-## Contributing
+Detailed documentation is available at [docs.weblogng.com](http://docs.weblogng.com/en/latest/client-library-angular-weblogng.html)
 
-We'll check out your contribution if you:
+## Contributing ##
+
+We'd love to consider your contribution! Please:
 
 * Provide a comprehensive suite of tests for your fork.
 * Have a clear and documented rationale for your changes.
@@ -51,6 +55,6 @@ We'll check out your contribution if you:
 
 We'll do our best to help you out with any contribution issues you may have.
 
-## License
+## License ##
 
 MIT. See `LICENSE.txt` in this directory.

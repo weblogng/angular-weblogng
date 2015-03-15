@@ -51,9 +51,11 @@ describe('Module: weblogng', function() {
 
     var httpInterceptor;
     var weblogng;
+    var window;
 
     beforeEach(inject(function (_$window_, _httpInterceptor_) {
       httpInterceptor = _httpInterceptor_;
+      window = _$window_;
       weblogng = _$window_.weblogng;
     }));
 
@@ -116,12 +118,14 @@ describe('Module: weblogng', function() {
         };
 
         var expectedElapsedTime = 42;
-        spyOn(config.timer, 'getElapsedTime').andReturn(42);
+        spyOn(config.timer, 'getElapsedTime').andReturn(expectedElapsedTime);
 
         httpInterceptor.response(responseIn);
 
+        var expectedTimestamp = weblogng.epochTimeInMilliseconds();
         var metricName = 'some_query_path';
-        expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime);
+        var scope = window.location.origin;
+        expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime, expectedTimestamp, scope, 'http request');
       });
     });
 

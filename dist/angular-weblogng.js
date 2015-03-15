@@ -38,6 +38,13 @@
           defaultQueryPathToMetricNameConverter;
       }
 
+      function calculateScope() {
+        if ($window.location && $window.location.origin) {
+          return $window.location.origin;
+        }
+        return undefined;
+      }
+
       return {
         'request': function (config) {
 
@@ -55,7 +62,10 @@
 
           if(response.config.timer){
             response.config.timer.finish();
-            logger.sendMetric(metricName, response.config.timer.getElapsedTime());
+
+            var timestamp = $window.weblogng.epochTimeInMilliseconds();
+            var scope = calculateScope(response.config);
+            logger.sendMetric(metricName, response.config.timer.getElapsedTime(), timestamp, scope, 'http request');
           }
 
           return response || $q.when(response);

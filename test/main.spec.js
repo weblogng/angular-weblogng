@@ -103,6 +103,28 @@ describe('Module: weblogng', function() {
       expect(config.timer.tFinish).toBeDefined();
     });
 
+    it('should send a metric to the logger when a response is handled', function(){
+      inject(function (_$rootScope_, _$weblogng_) {
+        spyOn(_$weblogng_, 'sendMetric');
+
+        var config = {
+          timer: new weblogng.Timer(),
+          url: '/some/query/path'
+        };
+        var responseIn = {
+          config: config
+        };
+
+        var expectedElapsedTime = 42;
+        spyOn(config.timer, 'getElapsedTime').andReturn(42);
+
+        httpInterceptor.response(responseIn);
+
+        var metricName = 'some_query_path';
+        expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime);
+      });
+    });
+
   });
 
 });

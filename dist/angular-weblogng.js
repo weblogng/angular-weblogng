@@ -45,7 +45,29 @@
         return undefined;
       }
 
+      function extractHostFromUrl(url) {
+        var anchor = $window.document.createElement('a');
+        anchor.href = url;
+        return anchor.host;
+      }
+
       return {
+        'extractHostFromUrl': extractHostFromUrl,
+
+        'convertRequestConfigToMetricName': function (config) {
+          var metricName;
+
+          if(config && config.url){
+            metricName = extractHostFromUrl(config.url);
+
+            if(config.method){
+              metricName = metricName + '-' + config.method;
+            }
+          }
+
+          return metricName;
+        },
+
         'request': function (config) {
 
           config.timer = new $window.weblogng.Timer();

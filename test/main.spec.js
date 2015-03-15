@@ -129,6 +129,36 @@ describe('Module: weblogng', function() {
       });
     });
 
+    describe('convertRequestConfigToMetricName', function (){
+      it('should convert request configs to metric names', function (){
+
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: '/some/query/path',
+          method: 'GET'
+        })).toBe(httpInterceptor.extractHostFromUrl(window.location.origin) + '-GET');
+
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: 'https://wwww.weblogng.com/some/query/path',
+          method: 'GET'
+        })).toBe('wwww.weblogng.com-GET');
+
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: 'https://api.weblogng.com/service?param1=a&param2=b',
+          method: 'GET'
+        })).toBe('api.weblogng.com-GET');
+
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: 'https://api.weblogng.com/resource/abcd-1234-efgh-5678',
+          method: 'PUT'
+        })).toBe('api.weblogng.com-PUT');
+
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: 'https://t.co',
+          method: 'GET'
+        })).toBe('t.co-GET');
+
+      });
+    });
   });
 
 });

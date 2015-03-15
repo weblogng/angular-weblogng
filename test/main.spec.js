@@ -111,7 +111,8 @@ describe('Module: weblogng', function() {
 
         var config = {
           timer: new weblogng.Timer(),
-          url: '/some/query/path'
+          url: 'https://www.weblogng.com/some/query/path',
+          method: 'GET'
         };
         var responseIn = {
           config: config
@@ -123,7 +124,7 @@ describe('Module: weblogng', function() {
         httpInterceptor.response(responseIn);
 
         var expectedTimestamp = weblogng.epochTimeInMilliseconds();
-        var metricName = 'some_query_path';
+        var metricName = 'www.weblogng.com-GET';
         var scope = window.location.origin;
         expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime, expectedTimestamp, scope, 'http request');
       });
@@ -138,9 +139,9 @@ describe('Module: weblogng', function() {
         })).toBe(httpInterceptor.extractHostFromUrl(window.location.origin) + '-GET');
 
         expect(httpInterceptor.convertRequestConfigToMetricName({
-          url: 'https://wwww.weblogng.com/some/query/path',
+          url: 'https://www.weblogng.com/some/query/path',
           method: 'GET'
-        })).toBe('wwww.weblogng.com-GET');
+        })).toBe('www.weblogng.com-GET');
 
         expect(httpInterceptor.convertRequestConfigToMetricName({
           url: 'https://api.weblogng.com/service?param1=a&param2=b',

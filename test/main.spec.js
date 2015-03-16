@@ -125,7 +125,7 @@ describe('Module: weblogng', function() {
 
         var expectedTimestamp = weblogng.epochTimeInMilliseconds();
         var metricName = 'GET www.weblogng.com';
-        var scope = window.location.origin;
+        var scope = 'www.weblogng.com';
         expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime, expectedTimestamp, scope, 'http request');
       });
     });
@@ -150,7 +150,7 @@ describe('Module: weblogng', function() {
 
         var expectedTimestamp = weblogng.epochTimeInMilliseconds();
         var metricName = 'POST www.weblogng.com';
-        var scope = window.location.origin;
+        var scope = 'www.weblogng.com';
         expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime, expectedTimestamp, scope, 'http request');
       });
     });
@@ -186,7 +186,45 @@ describe('Module: weblogng', function() {
         expect(httpInterceptor.convertRequestConfigToMetricName({
           url: 'https://t.co'
         })).toBe('t.co');
+      });
+    });
 
+    describe('calculateScope', function (){
+      it('should convert request configs to a scope', function (){
+
+        expect(httpInterceptor.calculateScope({
+          url: '/',
+          method: 'GET'
+        })).toBe(httpInterceptor.extractHostFromUrl(window.location.origin));
+
+        expect(httpInterceptor.calculateScope({
+          url: '/some/query/path',
+          method: 'GET'
+        })).toBe(httpInterceptor.extractHostFromUrl(window.location.origin));
+
+        expect(httpInterceptor.calculateScope({
+          url: 'https://www.weblogng.com/some/query/path',
+          method: 'GET'
+        })).toBe('www.weblogng.com');
+
+        expect(httpInterceptor.calculateScope({
+          url: 'https://api.weblogng.com/service?param1=a&param2=b',
+          method: 'GET'
+        })).toBe('api.weblogng.com');
+
+        expect(httpInterceptor.calculateScope({
+          url: 'https://api.weblogng.com/resource/abcd-1234-efgh-5678',
+          method: 'PUT'
+        })).toBe('api.weblogng.com');
+
+        expect(httpInterceptor.calculateScope({
+          url: 'https://t.co',
+          method: 'GET'
+        })).toBe('t.co');
+
+        expect(httpInterceptor.calculateScope({
+          url: 'https://t.co'
+        })).toBe('t.co');
       });
     });
   });

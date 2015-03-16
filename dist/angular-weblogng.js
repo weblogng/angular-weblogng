@@ -37,9 +37,9 @@
           defaultConvertRequestConfigToMetricName;
       }
 
-      function calculateScope() {
-        if ($window.location && $window.location.origin) {
-          return $window.location.origin;
+      function calculateScope(requestConfig) {
+        if (requestConfig && requestConfig.url) {
+          return extractHostFromUrl(requestConfig.url);
         }
         return undefined;
       }
@@ -52,6 +52,7 @@
 
       return {
         'extractHostFromUrl': extractHostFromUrl,
+        'calculateScope': calculateScope,
         'convertRequestConfigToMetricName': defaultConvertRequestConfigToMetricName,
 
         'request': function (config) {

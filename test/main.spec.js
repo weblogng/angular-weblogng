@@ -124,7 +124,7 @@ describe('Module: weblogng', function() {
         httpInterceptor.response(rejectionIn);
 
         var expectedTimestamp = weblogng.epochTimeInMilliseconds();
-        var metricName = 'www.weblogng.com-GET';
+        var metricName = 'GET www.weblogng.com';
         var scope = window.location.origin;
         expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime, expectedTimestamp, scope, 'http request');
       });
@@ -149,7 +149,7 @@ describe('Module: weblogng', function() {
         httpInterceptor.responseError(responseIn);
 
         var expectedTimestamp = weblogng.epochTimeInMilliseconds();
-        var metricName = 'www.weblogng.com-POST';
+        var metricName = 'POST www.weblogng.com';
         var scope = window.location.origin;
         expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime, expectedTimestamp, scope, 'http request');
       });
@@ -161,27 +161,27 @@ describe('Module: weblogng', function() {
         expect(httpInterceptor.convertRequestConfigToMetricName({
           url: '/some/query/path',
           method: 'GET'
-        })).toBe(httpInterceptor.extractHostFromUrl(window.location.origin) + '-GET');
+        })).toBe('GET ' + httpInterceptor.extractHostFromUrl(window.location.origin));
 
         expect(httpInterceptor.convertRequestConfigToMetricName({
           url: 'https://www.weblogng.com/some/query/path',
           method: 'GET'
-        })).toBe('www.weblogng.com-GET');
+        })).toBe('GET www.weblogng.com');
 
         expect(httpInterceptor.convertRequestConfigToMetricName({
           url: 'https://api.weblogng.com/service?param1=a&param2=b',
           method: 'GET'
-        })).toBe('api.weblogng.com-GET');
+        })).toBe('GET api.weblogng.com');
 
         expect(httpInterceptor.convertRequestConfigToMetricName({
           url: 'https://api.weblogng.com/resource/abcd-1234-efgh-5678',
           method: 'PUT'
-        })).toBe('api.weblogng.com-PUT');
+        })).toBe('PUT api.weblogng.com');
 
         expect(httpInterceptor.convertRequestConfigToMetricName({
           url: 'https://t.co',
           method: 'GET'
-        })).toBe('t.co-GET');
+        })).toBe('GET t.co');
 
       });
     });

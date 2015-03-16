@@ -24,7 +24,7 @@
           metricName = extractHostFromUrl(config.url);
 
           if (config.method) {
-            metricName = metricName + '-' + config.method;
+            metricName = config.method + ' ' + metricName;
           }
         }
 

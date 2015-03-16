@@ -100,7 +100,9 @@
             var metricName = convertRequestConfigToMetricName(rejection.config);
 
             rejection.config.timer.finish();
-            logger.sendMetric(metricName, rejection.config.timer.getElapsedTime());
+            var timestamp = $window.weblogng.epochTimeInMilliseconds();
+            var scope = calculateScope(rejection.config);
+            logger.sendMetric(metricName, rejection.config.timer.getElapsedTime(), timestamp, scope, 'http request');
           }
 
           switch(rejection.status){

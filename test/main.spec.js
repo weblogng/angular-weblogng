@@ -114,17 +114,42 @@ describe('Module: weblogng', function() {
           url: 'https://www.weblogng.com/some/query/path',
           method: 'GET'
         };
-        var responseIn = {
+        var rejectionIn = {
           config: config
         };
 
         var expectedElapsedTime = 42;
         spyOn(config.timer, 'getElapsedTime').andReturn(expectedElapsedTime);
 
-        httpInterceptor.response(responseIn);
+        httpInterceptor.response(rejectionIn);
 
         var expectedTimestamp = weblogng.epochTimeInMilliseconds();
         var metricName = 'www.weblogng.com-GET';
+        var scope = window.location.origin;
+        expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime, expectedTimestamp, scope, 'http request');
+      });
+    });
+
+    it('should send a metric to the logger when a responseError is handled', function(){
+      inject(function (_$rootScope_, _$weblogng_) {
+        spyOn(_$weblogng_, 'sendMetric');
+
+        var config = {
+          timer: new weblogng.Timer(),
+          url: 'https://www.weblogng.com/some/query/path',
+          method: 'POST'
+        };
+        var responseIn = {
+          config: config
+        };
+
+        var expectedElapsedTime = 24;
+        spyOn(config.timer, 'getElapsedTime').andReturn(expectedElapsedTime);
+
+        httpInterceptor.responseError(responseIn);
+
+        var expectedTimestamp = weblogng.epochTimeInMilliseconds();
+        var metricName = 'www.weblogng.com-POST';
         var scope = window.location.origin;
         expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime, expectedTimestamp, scope, 'http request');
       });

@@ -55,6 +55,10 @@ We'd love to consider your contribution! Please:
 
 We'll do our best to help you out with any contribution issues you may have.
 
+## Developing ##
+
+Use the `grunt watch` command to execute the build continuously during development.
+
 ## License ##
 
 MIT. See `LICENSE.txt` in this directory.

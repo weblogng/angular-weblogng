@@ -51,9 +51,11 @@ describe('Module: weblogng', function() {
 
     var httpInterceptor;
     var weblogng;
+    var window;
 
     beforeEach(inject(function (_$window_, _httpInterceptor_) {
       httpInterceptor = _httpInterceptor_;
+      window = _$window_;
       weblogng = _$window_.weblogng;
     }));
 
@@ -103,6 +105,128 @@ describe('Module: weblogng', function() {
       expect(config.timer.tFinish).toBeDefined();
     });
 
+    it('should send a metric to the logger when a response is handled', function(){
+      inject(function (_$rootScope_, _$weblogng_) {
+        spyOn(_$weblogng_, 'sendMetric');
+
+        var config = {
+          timer: new weblogng.Timer(),
+          url: 'https://www.weblogng.com/some/query/path',
+          method: 'GET'
+        };
+        var rejectionIn = {
+          config: config
+        };
+
+        var expectedElapsedTime = 42;
+        spyOn(config.timer, 'getElapsedTime').andReturn(expectedElapsedTime);
+
+        httpInterceptor.response(rejectionIn);
+
+        var expectedTimestamp = weblogng.epochTimeInMilliseconds();
+        var metricName = 'GET www.weblogng.com';
+        var scope = 'www.weblogng.com';
+        expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime, expectedTimestamp, scope, 'http request');
+      });
+    });
+
+    it('should send a metric to the logger when a responseError is handled', function(){
+      inject(function (_$rootScope_, _$weblogng_) {
+        spyOn(_$weblogng_, 'sendMetric');
+
+        var config = {
+          timer: new weblogng.Timer(),
+          url: 'https://www.weblogng.com/some/query/path',
+          method: 'POST'
+        };
+        var responseIn = {
+          config: config
+        };
+
+        var expectedElapsedTime = 24;
+        spyOn(config.timer, 'getElapsedTime').andReturn(expectedElapsedTime);
+
+        httpInterceptor.responseError(responseIn);
+
+        var expectedTimestamp = weblogng.epochTimeInMilliseconds();
+        var metricName = 'POST www.weblogng.com';
+        var scope = 'www.weblogng.com';
+        expect(_$weblogng_.sendMetric).toHaveBeenCalledWith(metricName, expectedElapsedTime, expectedTimestamp, scope, 'http request');
+      });
+    });
+
+    describe('convertRequestConfigToMetricName', function (){
+      it('should convert request configs to metric names', function (){
+
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: '/some/query/path',
+          method: 'GET'
+        })).toBe('GET ' + httpInterceptor.extractHostFromUrl(window.location.origin));
+
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: 'https://www.weblogng.com/some/query/path',
+          method: 'GET'
+        })).toBe('GET www.weblogng.com');
+
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: 'https://api.weblogng.com/service?param1=a&param2=b',
+          method: 'GET'
+        })).toBe('GET api.weblogng.com');
+
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: 'https://api.weblogng.com/resource/abcd-1234-efgh-5678',
+          method: 'PUT'
+        })).toBe('PUT api.weblogng.com');
+
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: 'https://t.co',
+          method: 'GET'
+        })).toBe('GET t.co');
+
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: 'https://t.co'
+        })).toBe('t.co');
+      });
+    });
+
+    describe('calculateScope', function (){
+      it('should convert request configs to a scope', function (){
+
+        expect(httpInterceptor.calculateScope({
+          url: '/',
+          method: 'GET'
+        })).toBe(httpInterceptor.extractHostFromUrl(window.location.origin));
+
+        expect(httpInterceptor.calculateScope({
+          url: '/some/query/path',
+          method: 'GET'
+        })).toBe(httpInterceptor.extractHostFromUrl(window.location.origin));
+
+        expect(httpInterceptor.calculateScope({
+          url: 'https://www.weblogng.com/some/query/path',
+          method: 'GET'
+        })).toBe('www.weblogng.com');
+
+        expect(httpInterceptor.calculateScope({
+          url: 'https://api.weblogng.com/service?param1=a&param2=b',
+          method: 'GET'
+        })).toBe('api.weblogng.com');
+
+        expect(httpInterceptor.calculateScope({
+          url: 'https://api.weblogng.com/resource/abcd-1234-efgh-5678',
+          method: 'PUT'
+        })).toBe('api.weblogng.com');
+
+        expect(httpInterceptor.calculateScope({
+          url: 'https://t.co',
+          method: 'GET'
+        })).toBe('t.co');
+
+        expect(httpInterceptor.calculateScope({
+          url: 'https://t.co'
+        })).toBe('t.co');
+      });
+    });
   });
 
 });

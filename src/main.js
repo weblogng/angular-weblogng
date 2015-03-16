@@ -17,28 +17,44 @@
   .config(function ($provide, $httpProvider) {
     $provide.factory('httpInterceptor', function ($window, $q, $injector, $log) {
 
-      var PATTERN_LEADING_SLASH = /^\//;
-      var PATTERN_TRAILING_SLASH = /\/$/;
-      var PATTERN_SLASH = /\//g;
+      function defaultConvertRequestConfigToMetricName (config) {
+        var metricName;
 
-      function defaultQueryPathToMetricNameConverter(queryPath) {
-        if (typeof queryPath === 'string' || queryPath instanceof String) {
-          return queryPath
-            .replace(PATTERN_LEADING_SLASH, '')
-            .replace(PATTERN_TRAILING_SLASH, '')
-            .replace(PATTERN_SLASH, '_');
-        } else {
-          return undefined;
+        if (config && config.url) {
+          metricName = extractHostFromUrl(config.url);
+
+          if (config.method) {
+            metricName = config.method + ' ' + metricName;
+          }
         }
+
+        return metricName;
       }
 
-      function resolveQueryPathToMetricNameConverter(logger){
-        return logger.options.queryPathToMetricNameConverter ?
-          logger.options.queryPathToMetricNameConverter :
-          defaultQueryPathToMetricNameConverter;
+      function resolveRequestConfigToMetricNameConverter(logger){
+        return logger.options.convertRequestConfigToMetricName ?
+          logger.options.convertRequestConfigToMetricName :
+          defaultConvertRequestConfigToMetricName;
+      }
+
+      function calculateScope(requestConfig) {
+        if (requestConfig && requestConfig.url) {
+          return extractHostFromUrl(requestConfig.url);
+        }
+        return undefined;
+      }
+
+      function extractHostFromUrl(url) {
+        var anchor = $window.document.createElement('a');
+        anchor.href = url;
+        return anchor.host;
       }
 
       return {
+        'extractHostFromUrl': extractHostFromUrl,
+        'calculateScope': calculateScope,
+        'convertRequestConfigToMetricName': defaultConvertRequestConfigToMetricName,
+
         'request': function (config) {
 
           config.timer = new $window.weblogng.Timer();
@@ -50,12 +66,15 @@
         'response': function (response) {
           var logger = $injector.get('$weblogng');
 
-          var queryPathToMetricNameConverter = resolveQueryPathToMetricNameConverter(logger);
-          var metricName = queryPathToMetricNameConverter(response.config.url);
+          var convertRequestConfigToMetricName = resolveRequestConfigToMetricNameConverter(logger);
+          var metricName = convertRequestConfigToMetricName(response.config);
 
           if(response.config.timer){
             response.config.timer.finish();
-            logger.sendMetric(metricName, response.config.timer.getElapsedTime());
+
+            var timestamp = $window.weblogng.epochTimeInMilliseconds();
+            var scope = calculateScope(response.config);
+            logger.sendMetric(metricName, response.config.timer.getElapsedTime(), timestamp, scope, 'http request');
           }
 
           return response || $q.when(response);
@@ -78,11 +97,13 @@
           if(rejection && rejection.config && rejection.config.timer){
             var logger = $injector.get('$weblogng');
 
-            var queryPathToMetricNameConverter = resolveQueryPathToMetricNameConverter(logger);
-            var metricName = queryPathToMetricNameConverter(rejection.config.url);
+            var convertRequestConfigToMetricName = resolveRequestConfigToMetricNameConverter(logger);
+            var metricName = convertRequestConfigToMetricName(rejection.config);
 
             rejection.config.timer.finish();
-            logger.sendMetric(metricName, rejection.config.timer.getElapsedTime());
+            var timestamp = $window.weblogng.epochTimeInMilliseconds();
+            var scope = calculateScope(rejection.config);
+            logger.sendMetric(metricName, rejection.config.timer.getElapsedTime(), timestamp, scope, 'http request');
           }
 
           switch(rejection.status){
@@ -103,9 +124,7 @@
     });
 
     $httpProvider.interceptors.push('httpInterceptor');
-  })
-
-    .run(function ($rootScope, $injector) {
+  }).run(function ($rootScope, $injector) {
       $rootScope.$on('$routeChangeSuccess', function (event, next) {
         var logger = $injector.get('$weblogng');
         logger.recordEvent('routeChangeSuccess-' + next.loadedTemplateUrl);

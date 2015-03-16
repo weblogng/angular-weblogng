@@ -17,7 +17,7 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "angular": ">= 1.2.0",
-    "weblogng-logger": ">= 0.6.2"
+    "weblogng-logger": ">= 0.6.4"
   },
   "devDependencies": {
     "grunt-contrib-concat": "~0.3.0",

@@ -183,6 +183,10 @@ describe('Module: weblogng', function() {
           method: 'GET'
         })).toBe('GET t.co');
 
+        expect(httpInterceptor.convertRequestConfigToMetricName({
+          url: 'https://t.co'
+        })).toBe('t.co');
+
       });
     });
   });
